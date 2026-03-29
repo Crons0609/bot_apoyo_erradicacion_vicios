@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RenovaBot Admin — Dashboard</title>
+  <meta name="description" content="Panel de control del bot de apoyo para erradicación de vicios." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body class="admin-page">
+
+  <!-- ─── Sidebar ─────────────────────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo-icon">🌱</span>
+      <div>
+        <span class="sidebar-logo-text">RenovaBot</span>
+        <span class="sidebar-tagline">Admin Panel</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#dashboard" class="nav-item active" data-section="dashboard" id="nav-dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="#usuarios" class="nav-item" data-section="usuarios" id="nav-usuarios">
+        <span class="nav-icon">👥</span>
+        <span class="nav-label">Usuarios</span>
+      </a>
+      <a href="#eventos" class="nav-item" data-section="eventos" id="nav-eventos">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Eventos</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-info">
+        <span class="admin-avatar" id="admin-avatar">👤</span>
+        <div class="admin-details">
+          <span class="admin-name" id="admin-email-display">Cargando...</span>
+          <span class="admin-role">Administrador</span>
+        </div>
+      </div>
+      <button class="btn-logout" id="logout-btn" title="Cerrar sesión">⏻</button>
+    </div>
+  </aside>
+
+  <!-- ─── Contenido Principal ──────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <span class="badge badge-live">● LIVE</span>
+        <span class="topbar-time" id="topbar-time"></span>
+      </div>
+    </header>
+
+    <!-- ── Sección: Dashboard ───────────────────────────────────────────────── -->
+    <section id="section-dashboard" class="section active">
+      <div class="section-header">
+        <h2>📊 Dashboard General</h2>
+        <p class="section-desc">Vista general del sistema en tiempo real.</p>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid" id="kpi-grid">
+        <div class="kpi-card" id="kpi-total">
+          <div class="kpi-icon">👥</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-total-val">—</span>
+            <span class="kpi-label">Usuarios Totales</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-green" id="kpi-activos">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-activos-val">—</span>
+            <span class="kpi-label">Planes Activos</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-blue" id="kpi-completados">
+          <div class="kpi-icon">🏆</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-completados-val">—</span>
+            <span class="kpi-label">Completados</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-orange" id="kpi-pausados">
+          <div class="kpi-icon">⏸️</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-pausados-val">—</span>
+            <span class="kpi-label">Pausados</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-purple">
+          <div class="kpi-icon">🔥</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-racha-val">—</span>
+            <span class="kpi-label">Racha Máxima (días)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top usuarios recientes -->
+      <div class="cards-row">
+        <div class="card">
+          <div class="card-header">
+            <h3>👥 Usuarios Recientes</h3>
+            <button class="btn btn-sm" onclick="loadSection('usuarios')">Ver todos</button>
+          </div>
+          <div class="card-body" id="recent-users-list">
+            <div class="skeleton-list">
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>📋 Actividad Reciente</h3>
+            <button class="btn btn-sm" onclick="loadSection('eventos')">Ver todo</button>
+          </div>
+          <div class="card-body" id="recent-events-dashboard">
+            <div class="skeleton-list">
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Sección: Usuarios ────────────────────────────────────────────────── -->
+    <section id="section-usuarios" class="section hidden">
+      <div class="section-header">
+        <h2>👥 Gestión de Usuarios</h2>
+        <p class="section-desc">Lista completa de usuarios registrados en el sistema.</p>
+      </div>
+
+      <!-- Filtros y búsqueda -->
+      <div class="filters-bar">
+        <div class="input-wrapper search-wrapper">
+          <span class="input-icon">🔍</span>
+          <input id="search-users" type="text" placeholder="Buscar por nombre, username o vicio..." />
+        </div>
+        <select id="filter-estado" class="select-filter">
+          <option value="">Todos los estados</option>
+          <option value="activo">Activos</option>
+          <option value="pausado">Pausados</option>
+          <option value="completado">Completados</option>
+          <option value="recuperacion">En recuperación</option>
+        </select>
+        <select id="sort-by" class="select-filter">
+          <option value="creado_el">Fecha de registro</option>
+          <option value="racha_dias">Por racha</option>
+          <option value="xp">Por XP</option>
+        </select>
+      </div>
+
+      <!-- Tabla de usuarios -->
+      <div class="table-wrapper">
+        <table class="data-table" id="users-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Vicio</th>
+              <th>Estado</th>
+              <th>Racha</th>
+              <th>XP</th>
+              <th>Nivel</th>
+              <th>Inicio</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="8" class="loading-row">Cargando usuarios...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Sección: Eventos ────────────────────────────────────────────────── -->
+    <section id="section-eventos" class="section hidden">
+      <div class="section-header">
+        <h2>📋 Historial de Eventos</h2>
+        <p class="section-desc">Todos los eventos del sistema en tiempo real.</p>
+      </div>
+      <div class="timeline" id="events-timeline">
+        <div class="skeleton-list">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── Modal: Detalle / Edición de Usuario ──────────────────────────────── -->
+  <div class="modal-overlay hidden" id="user-modal-overlay">
+    <div class="modal glass-card" id="user-modal">
+      <div class="modal-header">
+        <div class="modal-user-info">
+          <div class="user-avatar-large" id="modal-avatar">👤</div>
+          <div>
+            <h3 id="modal-nombre">—</h3>
+            <p id="modal-username" class="text-muted">—</p>
+          </div>
+        </div>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="info">📄 Info</button>
+        <button class="tab-btn" data-tab="progreso">📊 Progreso</button>
+        <button class="tab-btn" data-tab="ayudantes">🤝 Ayudantes</button>
+        <button class="tab-btn" data-tab="recaidas">❗ Recaídas</button>
+        <button class="tab-btn" data-tab="acciones">⚙️ Acciones</button>
+      </div>
+
+      <!-- Tab: Info -->
+      <div class="tab-content active" id="tab-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Telegram ID</span>
+            <span class="info-value" id="info-telegram-id">—</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Vicio / Hábito</span>
+            <span class="info-value" id="info-vicio">—</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Estado del Plan</span>
+            <span class="info-value" id="info-estado">—</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Duración</span>
+            <span class="info-value" id="info-duracion">—</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha de Inicio</span>
+            <span class="info-value" id="info-fecha-inicio">—</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Compromiso</span>
+            <span class="info-value" id="info-compromiso">—</span>
+          </div>
+        </div>
+
+        <!-- Edit inline -->
+        <div class="edit-section">
+          <h4>✏️ Editar datos</h4>
+          <div class="edit-grid">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" id="edit-nombre" placeholder="Nombre del usuario" />
+            </div>
+            <div class="form-group">
+              <label>XP Manual</label>
+              <input type="number" id="edit-xp" placeholder="XP actual" />
+            </div>
+            <div class="form-group">
+              <label>Racha (días)</label>
+              <input type="number" id="edit-racha" placeholder="Racha actual" />
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select id="edit-estado">
+                <option value="activo">Activo</option>
+                <option value="pausado">Pausado</option>
+                <option value="completado">Completado</option>
+                <option value="recuperacion">En recuperación</option>
+                <option value="abandonado">Abandonado</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="save-user-btn">💾 Guardar cambios</button>
+        </div>
+      </div>
+
+      <!-- Tab: Progreso -->
+      <div class="tab-content hidden" id="tab-progreso">
+        <div class="progress-summary">
+          <div class="progress-stat">
+            <span class="stat-label">Racha actual</span>
+            <span class="stat-value fire" id="prog-racha">—</span>
+          </div>
+          <div class="progress-stat">
+            <span class="stat-label">XP Total</span>
+            <span class="stat-value star" id="prog-xp">—</span>
+          </div>
+          <div class="progress-stat">
+            <span class="stat-label">Nivel</span>
+            <span class="stat-value shield" id="prog-nivel">—</span>
+          </div>
+        </div>
+        <div class="xp-bar-wrapper">
+          <div class="xp-bar-label">Progreso al siguiente nivel</div>
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="prog-xp-bar"></div>
+          </div>
+          <div class="xp-bar-text" id="prog-xp-text">—</div>
+        </div>
+        <h4 class="mt-lg">📋 Últimas misiones</h4>
+        <div id="missions-list" class="mission-list"></div>
+      </div>
+
+      <!-- Tab: Ayudantes -->
+      <div class="tab-content hidden" id="tab-ayudantes">
+        <div id="helpers-list" class="helpers-list">
+          <p class="text-muted">Sin ayudantes registrados.</p>
+        </div>
+      </div>
+
+      <!-- Tab: Recaídas -->
+      <div class="tab-content hidden" id="tab-recaidas">
+        <div id="relapses-list" class="relapses-list">
+          <p class="text-muted">Sin recaídas registradas.</p>
+        </div>
+      </div>
+
+      <!-- Tab: Acciones -->
+      <div class="tab-content hidden" id="tab-acciones">
+        <div class="actions-grid">
+          <button class="btn btn-success" id="btn-resume">▶️ Reanudar plan</button>
+          <button class="btn btn-warning" id="btn-pause">⏸️ Pausar plan</button>
+          <button class="btn btn-primary" id="btn-finish">🏁 Marcar completado</button>
+        </div>
+
+        <div class="form-group mt-lg">
+          <label>📤 Enviar mensaje personalizado</label>
+          <textarea id="custom-message" rows="3" placeholder="Escribe el mensaje que verá el usuario en Telegram..."></textarea>
+          <button class="btn btn-primary mt-sm" id="btn-send-message">📤 Enviar mensaje</button>
+        </div>
+
+        <div id="action-feedback" class="alert hidden"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="/assets/js/firebase.js"></script>
+  <script src="/assets/js/script.js"></script>
+</body>
+</html>

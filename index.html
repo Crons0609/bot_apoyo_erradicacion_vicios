@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RenovaBot — Acceso al Panel</title>
+  <meta name="description" content="Panel administrativo del bot de apoyo RenovaBot." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+
+  <style>
+    /* ── Estilos extra para las pestañas del login ─── */
+    .login-tabs {
+      display: flex;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+    .login-tab {
+      flex: 1;
+      text-align: center;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+    .login-tab.active {
+      background: rgba(99,102,241,0.25);
+      color: #818cf8;
+      border: 1px solid rgba(99,102,241,0.4);
+    }
+    .login-tab:hover:not(.active) {
+      background: rgba(255,255,255,0.05);
+      color: #f1f5f9;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #475569;
+      font-size: 12px;
+      margin: 16px 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .admin-register-note {
+      background: rgba(245,158,11,0.10);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #fcd34d;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .password-strength {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.06);
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .password-strength-bar {
+      height: 100%;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      width: 0%;
+    }
+    .strength-weak   { width: 33%; background: #ef4444; }
+    .strength-medium { width: 66%; background: #f59e0b; }
+    .strength-strong { width: 100%; background: #10b981; }
+  </style>
+</head>
+<body class="login-page">
+
+  <!-- Fondo animado -->
+  <div class="login-bg">
+    <div class="login-orb orb-1"></div>
+    <div class="login-orb orb-2"></div>
+    <div class="login-orb orb-3"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-card glass-card">
+
+      <!-- Logo -->
+      <div class="login-logo">
+        <span class="logo-icon">🌱</span>
+        <h1 class="logo-title">RenovaBot</h1>
+        <p class="logo-subtitle">Panel Administrativo</p>
+      </div>
+
+      <!-- Pestañas: Iniciar Sesión / Agregar Admin -->
+      <div class="login-tabs">
+        <button class="login-tab active" id="tab-login-btn" onclick="switchTab('login')">
+          🔑 Iniciar Sesión
+        </button>
+        <button class="login-tab" id="tab-register-btn" onclick="switchTab('register')">
+          👤 Agregar Admin
+        </button>
+      </div>
+
+      <!-- ── Panel: Iniciar Sesión ──────────────────────── -->
+      <div class="tab-panel active" id="panel-login">
+        <div id="login-error" class="alert alert-error hidden"></div>
+
+        <form id="login-form" autocomplete="on">
+          <div class="form-group" style="margin-bottom:16px">
+            <label for="login-email">Correo electrónico</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                id="login-email"
+                type="email"
+                placeholder="admin@ejemplo.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:20px">
+            <label for="login-password">Contraseña</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input
+                id="login-password"
+                type="password"
+                placeholder="••••••••"
+                required
+                autocomplete="current-password"
+              />
+            </div>
+          </div>
+
+          <button id="login-btn" class="btn btn-primary btn-full" type="submit">
+            <span id="login-btn-text">Ingresar al Panel</span>
+            <span id="login-btn-loader" class="hidden">⏳ Verificando...</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- ── Panel: Agregar Administrador ──────────────── -->
+      <div class="tab-panel" id="panel-register">
+
+        <div class="admin-register-note">
+          ⚠️ <strong>Solo para administradores.</strong> Cada cuenta creada aquí
+          tendrá acceso completo al panel. Comparte estas credenciales de forma segura.
+        </div>
+
+        <div id="register-error" class="alert alert-error hidden"></div>
+        <div id="register-success" class="alert alert-success hidden"></div>
+
+        <form id="register-form" autocomplete="off">
+          <div class="form-group" style="margin-bottom:14px">
+            <label for="reg-name">Nombre del administrador</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input
+                id="reg-name"
+                type="text"
+                placeholder="Nombre completo"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:14px">
+            <label for="reg-email">Correo electrónico</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                id="reg-email"
+                type="email"
+                placeholder="nuevo_admin@ejemplo.com"
+                required
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:6px">
+            <label for="reg-password">Contraseña (mínimo 6 caracteres)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input
+                id="reg-password"
+                type="password"
+                placeholder="••••••••"
+                required
+                minlength="6"
+                autocomplete="new-password"
+                oninput="checkPasswordStrength(this.value)"
+              />
+            </div>
+            <div class="password-strength">
+              <div class="password-strength-bar" id="strength-bar"></div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:20px">
+            <label for="reg-password2">Confirmar contraseña</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input
+                id="reg-password2"
+                type="password"
+                placeholder="••••••••"
+                required
+                autocomplete="new-password"
+              />
+            </div>
+          </div>
+
+          <button id="register-btn" class="btn btn-primary btn-full" type="submit">
+            <span id="register-btn-text">✅ Crear cuenta de administrador</span>
+            <span id="register-btn-loader" class="hidden">⏳ Creando cuenta...</span>
+          </button>
+        </form>
+      </div>
+
+      <p class="login-footer">RenovaBot — Sistema de apoyo para cambio de hábitos</p>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="/assets/js/firebase.js"></script>
+
+  <script>
+    /* ── Redirigir si ya hay sesión ─────────────────── */
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) window.location.href = '/admin';
+    });
+
+    /* ── Cambiar pestaña ─────────────────────────────── */
+    function switchTab(tab) {
+      document.getElementById('panel-login').classList.remove('active');
+      document.getElementById('panel-register').classList.remove('active');
+      document.getElementById('tab-login-btn').classList.remove('active');
+      document.getElementById('tab-register-btn').classList.remove('active');
+      document.getElementById(`panel-${tab}`).classList.add('active');
+      document.getElementById(`tab-${tab}-btn`).classList.add('active');
+      // Limpiar alertas al cambiar
+      ['login-error','register-error','register-success'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+    }
+
+    /* ── Indicador de fortaleza de contraseña ────────── */
+    function checkPasswordStrength(value) {
+      const bar = document.getElementById('strength-bar');
+      bar.className = 'password-strength-bar';
+      if (!value) return;
+      if (value.length < 6) bar.classList.add('strength-weak');
+      else if (value.length < 10 || !/[0-9]/.test(value)) bar.classList.add('strength-medium');
+      else bar.classList.add('strength-strong');
+    }
+
+    /* ── Iniciar Sesión ─────────────────────────────── */
+    document.getElementById('login-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errorDiv = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+      const btnText = document.getElementById('login-btn-text');
+      const btnLoader = document.getElementById('login-btn-loader');
+
+      errorDiv.classList.add('hidden');
+      btnText.classList.add('hidden');
+      btnLoader.classList.remove('hidden');
+      btn.disabled = true;
+
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      try {
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+        window.location.href = '/admin';
+      } catch (err) {
+        const msgs = {
+          'auth/user-not-found':    'No existe una cuenta con este correo.',
+          'auth/wrong-password':    'Contraseña incorrecta.',
+          'auth/invalid-email':     'Correo inválido.',
+          'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos.',
+          'auth/invalid-credential':'Correo o contraseña incorrectos.',
+        };
+        errorDiv.textContent = msgs[err.code] || `Error: ${err.message}`;
+        errorDiv.classList.remove('hidden');
+      } finally {
+        btnText.classList.remove('hidden');
+        btnLoader.classList.add('hidden');
+        btn.disabled = false;
+      }
+    });
+
+    /* ── Registrar nuevo administrador ──────────────── */
+    document.getElementById('register-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errorDiv   = document.getElementById('register-error');
+      const successDiv = document.getElementById('register-success');
+      const btn        = document.getElementById('register-btn');
+      const btnText    = document.getElementById('register-btn-text');
+      const btnLoader  = document.getElementById('register-btn-loader');
+
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+
+      const nombre   = document.getElementById('reg-name').value.trim();
+      const email    = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const password2= document.getElementById('reg-password2').value;
+
+      /* Validaciones locales */
+      if (password !== password2) {
+        errorDiv.textContent = 'Las contraseñas no coinciden.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      if (password.length < 6) {
+        errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      btnText.classList.add('hidden');
+      btnLoader.classList.remove('hidden');
+      btn.disabled = true;
+
+      try {
+        /* Crear usuario en Firebase Auth */
+        const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+        /* Guardar nombre en el perfil de Firebase Auth */
+        await cred.user.updateProfile({ displayName: nombre });
+
+        /* Guardar en Realtime Database como admin */
+        const key = email.replace(/[.#$[\]]/g, '_');
+        await firebase.database().ref(`administradores/${key}`).set({
+          nombre,
+          email,
+          uid: cred.user.uid,
+          creado_el: new Date().toISOString(),
+          rol: 'admin',
+        });
+
+        /* Cerrar la sesión recién creada para que no entre automáticamente */
+        await firebase.auth().signOut();
+
+        successDiv.textContent = `✅ Cuenta creada para ${nombre} (${email}). Ya puede iniciar sesión.`;
+        successDiv.classList.remove('hidden');
+        document.getElementById('register-form').reset();
+        document.getElementById('strength-bar').className = 'password-strength-bar';
+
+      } catch (err) {
+        const msgs = {
+          'auth/email-already-in-use': 'Este correo ya tiene una cuenta.',
+          'auth/invalid-email':        'Correo inválido.',
+          'auth/weak-password':        'Contraseña demasiado débil.',
+        };
+        errorDiv.textContent = msgs[err.code] || `Error: ${err.message}`;
+        errorDiv.classList.remove('hidden');
+      } finally {
+        btnText.classList.remove('hidden');
+        btnLoader.classList.add('hidden');
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

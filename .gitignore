@@ -1,0 +1,18 @@
+# Ignorar archivos sensibles y temporales
+.env
+firebase_credentials.json
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+*.log
+*.sqlite3
+sqlite3.exe
+.DS_Store

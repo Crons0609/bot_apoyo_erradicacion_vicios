@@ -1,0 +1,47 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "usuarios": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+
+    "ayudantes": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+
+    "invitaciones": {
+      "$token": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+
+    "misiones_logs": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "recaidas": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "eventos": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "cola_notificaciones": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}
