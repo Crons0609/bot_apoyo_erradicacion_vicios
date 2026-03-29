@@ -26,22 +26,26 @@
 
     "misiones_logs": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      ".write": "auth != null",
+      ".indexOn": ["usuario_id"]
     },
 
     "recaidas": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      ".write": "auth != null",
+      ".indexOn": ["usuario_id"]
     },
 
     "eventos": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      ".write": "auth != null",
+      ".indexOn": ["timestamp"]
     },
 
     "cola_notificaciones": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      ".write": "auth != null",
+      ".indexOn": ["enviado"]
     }
   }
 }
