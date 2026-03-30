@@ -17,6 +17,7 @@ from app.config import (
     WEBHOOK_PATH,
     WEBHOOK_SECRET,
     DEBUG,
+    CRON_KEY,
 )
 from app.services import firebase_db as fdb
 from app.services.xp_system import get_nivel_actual
@@ -306,6 +307,87 @@ def api_list_broadcasts():
     data = [{"id": k, **v} for k, v in snap.items() if v]
     data.sort(key=lambda x: x.get("fecha", ""), reverse=True)
     return jsonify({"ok": True, "data": data})
+
+
+# ─── Endpoints de Cron / Keep-Alive ─────────────────────────────────────────
+# Úsalos en UptimeRobot, cron-job.org o cualquier scheduler externo:
+#   https://bot-apoyo-erradicacion-vicios.onrender.com/api/cron/keep-alive?key=TU_CRON_KEY
+
+def _check_cron_key() -> bool:
+    """Valida la clave de cron desde query param o header X-Cron-Key."""
+    key = request.args.get("key") or request.headers.get("X-Cron-Key", "")
+    return hmac.compare_digest(key, CRON_KEY)
+
+
+@flask_app.route("/api/cron/keep-alive")
+def cron_keep_alive():
+    """
+    Endpoint principal de keep-alive para Render Free Tier.
+    Llamar periódicamente desde un cron externo para evitar el sleep.
+    URL: /api/cron/keep-alive?key=<CRON_KEY>
+    """
+    if not _check_cron_key():
+        return jsonify({"ok": False, "error": "Unauthorized"}), 401
+
+    return jsonify({
+        "ok":      True,
+        "status":  "alive",
+        "ts":      _now_iso(),
+        "service": "bot-apoyo-erradicacion-vicios",
+    })
+
+
+@flask_app.route("/api/cron/ping")
+def cron_ping():
+    """
+    Endpoint ligero de ping (sin clave). Útil para health checks simples.
+    URL: /api/cron/ping
+    """
+    return jsonify({"ok": True, "pong": True, "ts": _now_iso()})
+
+
+@flask_app.route("/api/cron/stats")
+def cron_stats():
+    """
+    Devuelve estadísticas básicas del sistema en formato JSON liviano.
+    Útil para monitoreo externo con cron.
+    URL: /api/cron/stats?key=<CRON_KEY>
+    """
+    if not _check_cron_key():
+        return jsonify({"ok": False, "error": "Unauthorized"}), 401
+
+    try:
+        users = fdb.get_all_users()
+        activos    = sum(1 for u in users if u.get("estado_plan") == "activo")
+        completados= sum(1 for u in users if u.get("estado_plan") == "completado")
+        racha_max  = max((u.get("racha_dias", 0) for u in users), default=0)
+        return jsonify({
+            "ok":           True,
+            "ts":           _now_iso(),
+            "total":        len(users),
+            "activos":      activos,
+            "completados":  completados,
+            "racha_max":    racha_max,
+        })
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@flask_app.route("/api/cron/notify-inactive")
+def cron_notify_inactive():
+    """
+    Dispara manualmente el job de inactividad.
+    URL: /api/cron/notify-inactive?key=<CRON_KEY>
+    """
+    if not _check_cron_key():
+        return jsonify({"ok": False, "error": "Unauthorized"}), 401
+
+    try:
+        from app.worker.scheduler import job_check_inactive_users
+        job_check_inactive_users()
+        return jsonify({"ok": True, "msg": "Job de inactividad ejecutado."})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 # ─── Ruta de fallback para SPA ────────────────────────────────────────────────

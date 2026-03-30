@@ -27,6 +27,10 @@ FLASK_SECRET_KEY: str = os.getenv("FLASK_SECRET_KEY", "RenovaBot_Flask_Key_2026_
 DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
 PORT: int = int(os.getenv("PORT", 10000))
 
+# Clave para proteger endpoints /api/cron/*
+# Úsala en tus URLs de cron externo: ?key=ESTE_VALOR
+CRON_KEY: str = os.getenv("CRON_KEY", "renovabot_cron_2026")
+
 # ─── Lógica de negocio ───────────────────────────────────────────────────────
 MAX_HELPERS: int = 2
 MIN_PLAN_MONTHS: int = 5
