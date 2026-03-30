@@ -50,16 +50,8 @@ def telegram_webhook():
     if not data:
         return jsonify({"ok": True})
 
-    from app.bot.main import get_application
-    from telegram import Update
-
-    async def _process():
-        app = get_application()
-        await app.initialize()
-        update = Update.de_json(data, app.bot)
-        await app.process_update(update)
-
-    asyncio.run(_process())
+    from app.bot.main import process_update_sync
+    process_update_sync(data)
     return jsonify({"ok": True})
 
 

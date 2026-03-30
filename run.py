@@ -18,10 +18,16 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    # 1. Configurar webhook en Telegram
+    # 1. Iniciar la Application del bot de Telegram en su propio loop
+    logger.info("Iniciando componentes del bot...")
+    from app.bot.main import start_bot_app, setup_webhook, get_bot_loop
+    start_bot_app()
+    
+    # 2. Configurar webhook en Telegram
     logger.info("Configurando webhook de Telegram...")
     try:
-        asyncio.run(setup_webhook())
+        loop = get_bot_loop()
+        asyncio.run_coroutine_threadsafe(setup_webhook(), loop).result()
     except Exception as e:
         logger.error(f"Error configurando webhook: {e}")
 
