@@ -9,7 +9,7 @@ VICIOS = [
     ("🚬 Cigarros",               "vicio_Cigarros"),
     ("🍺 Alcohol",                "vicio_Alcohol"),
     ("🌿 Marihuana",              "vicio_Marihuana"),
-    ("💊 Cocaína / Crack",        "vicio_Cocaina"),
+    ("💉 Cocaína / Crack",        "vicio_Cocaina"),
     ("🎰 Apuestas",               "vicio_Apuestas"),
     ("☕ Cafeína",                "vicio_Cafeina"),
     ("💊 Benzodiacepinas",        "vicio_Benzodiacepinas"),
@@ -64,23 +64,34 @@ def kb_select_num_helpers() -> InlineKeyboardMarkup:
     ])
 
 
+def kb_escrow_decision() -> InlineKeyboardMarkup:
+    """Pregunta si el usuario quiere registrar el compromiso simbólico."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("✅ Sí, me comprometo", callback_data="escrow_accept"),
+            InlineKeyboardButton("⏩ Omitir por ahora", callback_data="escrow_skip"),
+        ]
+    ])
+
+
 def kb_main_menu() -> InlineKeyboardMarkup:
     """Menú principal durante el plan activo."""
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("📋 Mis misiones",    callback_data="action_misiones"),
-            InlineKeyboardButton("📊 Mi progreso",     callback_data="action_progreso"),
+            InlineKeyboardButton("📋 Mis misiones",     callback_data="action_misiones"),
+            InlineKeyboardButton("📊 Mi progreso",      callback_data="action_progreso"),
         ],
         [
-            InlineKeyboardButton("🆘 Pedir ayuda",     callback_data="action_ayuda"),
-            InlineKeyboardButton("🌬️ Respirar",        callback_data="action_respirar"),
+            InlineKeyboardButton("🆘 Pedir ayuda",      callback_data="action_ayuda"),
+            InlineKeyboardButton("🌬️ Respirar",         callback_data="action_respirar"),
         ],
         [
             InlineKeyboardButton("⚠️ Reportar recaída", callback_data="action_recaida"),
-            InlineKeyboardButton("⏸️ Pausar plan",      callback_data="action_pausar"),
+            InlineKeyboardButton("⏸️ Pausar plan",       callback_data="action_pausar"),
         ],
         [
             InlineKeyboardButton("📞 Llamar ayudante",  callback_data="action_llamar"),
+            InlineKeyboardButton("🔄 Reintentar",        callback_data="action_reintentar"),
         ],
     ])
 
@@ -92,14 +103,35 @@ def kb_mission_done(mision_id: str) -> InlineKeyboardMarkup:
     ])
 
 
+def kb_pill_reminder(mision_id: str) -> InlineKeyboardMarkup:
+    """Botón para confirmar toma de pastilla. Otorga +10 puntos."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("✅ Pastilla tomada (+10 pts)", callback_data=f"pill_taken_{mision_id}"),
+            InlineKeyboardButton("⏰ Recordar en 10 min",       callback_data=f"pill_snooze_{mision_id}"),
+        ]
+    ])
+
+
+def kb_helper_pill_reminder(principal_nombre: str, principal_id: str) -> InlineKeyboardMarkup:
+    """Botones para que el ayudante apoye en el recordatorio de pastilla."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton(f"📞 Llamar a {principal_nombre}", callback_data=f"hlp_contact_{principal_id}"),
+            InlineKeyboardButton("✅ Ya lo contacté",               callback_data=f"hlp_check_{principal_id}"),
+        ]
+    ])
+
+
 def kb_relapse_confirm() -> InlineKeyboardMarkup:
-    """Confirmación de recaída con botón para iniciar recuperación."""
+    """Confirmación de recaída con opciones de recuperación."""
     return InlineKeyboardMarkup([
         [
             InlineKeyboardButton("💪 Iniciar recuperación", callback_data="recovery_start"),
             InlineKeyboardButton("🗣️ Hablar con alguien",   callback_data="action_llamar"),
         ],
         [
+            InlineKeyboardButton("🔄 Reintentar ahora",     callback_data="action_reintentar"),
             InlineKeyboardButton("🔙 Cancelar",             callback_data="cancel_relapse"),
         ],
     ])

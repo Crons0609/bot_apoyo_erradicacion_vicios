@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RenovaBot Admin — Dashboard</title>
+  <title>RenovaBot Admin — Panel de Control</title>
   <meta name="description" content="Panel de control del bot de apoyo para erradicación de vicios." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -26,9 +26,21 @@
         <span class="nav-icon">📊</span>
         <span class="nav-label">Dashboard</span>
       </a>
-      <a href="#usuarios" class="nav-item" data-section="usuarios" id="nav-usuarios">
+      <a href="#players" class="nav-item" data-section="players" id="nav-players">
         <span class="nav-icon">👥</span>
-        <span class="nav-label">Usuarios</span>
+        <span class="nav-label">Players</span>
+      </a>
+      <a href="#misiones" class="nav-item" data-section="misiones" id="nav-misiones">
+        <span class="nav-icon">🎯</span>
+        <span class="nav-label">Misiones</span>
+      </a>
+      <a href="#mensajes" class="nav-item" data-section="mensajes" id="nav-mensajes">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Mensajes</span>
+      </a>
+      <a href="#marketing" class="nav-item" data-section="marketing" id="nav-marketing">
+        <span class="nav-icon">📣</span>
+        <span class="nav-label">Marketing</span>
       </a>
       <a href="#eventos" class="nav-item" data-section="eventos" id="nav-eventos">
         <span class="nav-icon">📋</span>
@@ -41,7 +53,7 @@
         <span class="admin-avatar" id="admin-avatar">👤</span>
         <div class="admin-details">
           <span class="admin-name" id="admin-email-display">Cargando...</span>
-          <span class="admin-role">Administrador</span>
+          <span class="admin-role">Admistracor</span>
         </div>
       </div>
       <button class="btn-logout" id="logout-btn" title="Cerrar sesión">⏻</button>
@@ -61,14 +73,15 @@
       </div>
     </header>
 
-    <!-- ── Sección: Dashboard ───────────────────────────────────────────────── -->
+    <!-- ══════════════════════════════════════════════════════
+         SECCIÓN: DASHBOARD
+    ══════════════════════════════════════════════════════ -->
     <section id="section-dashboard" class="section active">
       <div class="section-header">
         <h2>📊 Dashboard General</h2>
         <p class="section-desc">Vista general del sistema en tiempo real.</p>
       </div>
 
-      <!-- KPI Cards -->
       <div class="kpi-grid" id="kpi-grid">
         <div class="kpi-card" id="kpi-total">
           <div class="kpi-icon">👥</div>
@@ -105,20 +118,24 @@
             <span class="kpi-label">Racha Máxima (días)</span>
           </div>
         </div>
+        <div class="kpi-card kpi-teal">
+          <div class="kpi-icon">⭐</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-xp-val">—</span>
+            <span class="kpi-label">XP Promedio</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Top usuarios recientes -->
       <div class="cards-row">
         <div class="card">
           <div class="card-header">
             <h3>👥 Usuarios Recientes</h3>
-            <button class="btn btn-sm" onclick="loadSection('usuarios')">Ver todos</button>
+            <button class="btn btn-sm" onclick="loadSection('players')">Ver todos</button>
           </div>
           <div class="card-body" id="recent-users-list">
             <div class="skeleton-list">
-              <div class="skeleton"></div>
-              <div class="skeleton"></div>
-              <div class="skeleton"></div>
+              <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
             </div>
           </div>
         </div>
@@ -130,65 +147,222 @@
           </div>
           <div class="card-body" id="recent-events-dashboard">
             <div class="skeleton-list">
-              <div class="skeleton"></div>
-              <div class="skeleton"></div>
-              <div class="skeleton"></div>
+              <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── Sección: Usuarios ────────────────────────────────────────────────── -->
-    <section id="section-usuarios" class="section hidden">
+    <!-- ══════════════════════════════════════════════════════
+         SECCIÓN: PLAYERS
+    ══════════════════════════════════════════════════════ -->
+    <section id="section-players" class="section hidden">
       <div class="section-header">
-        <h2>👥 Gestión de Usuarios</h2>
-        <p class="section-desc">Lista completa de usuarios registrados en el sistema.</p>
+        <h2>👥 Players</h2>
+        <p class="section-desc">Lista completa con progreso, XP, ayudantes y acciones directas.</p>
       </div>
 
-      <!-- Filtros y búsqueda -->
       <div class="filters-bar">
         <div class="input-wrapper search-wrapper">
           <span class="input-icon">🔍</span>
-          <input id="search-users" type="text" placeholder="Buscar por nombre, username o vicio..." />
+          <input id="search-players" type="text" placeholder="Buscar por nombre, username o vicio..." />
         </div>
-        <select id="filter-estado" class="select-filter">
+        <select id="filter-estado-players" class="select-filter">
           <option value="">Todos los estados</option>
           <option value="activo">Activos</option>
           <option value="pausado">Pausados</option>
           <option value="completado">Completados</option>
           <option value="recuperacion">En recuperación</option>
+          <option value="abandonado">Abandonados</option>
         </select>
-        <select id="sort-by" class="select-filter">
+        <select id="sort-by-players" class="select-filter">
           <option value="creado_el">Fecha de registro</option>
           <option value="racha_dias">Por racha</option>
           <option value="xp">Por XP</option>
+          <option value="progreso_pct">Por progreso</option>
         </select>
       </div>
 
-      <!-- Tabla de usuarios -->
       <div class="table-wrapper">
-        <table class="data-table" id="users-table">
+        <table class="data-table" id="players-table">
           <thead>
             <tr>
-              <th>Usuario</th>
+              <th>Player</th>
               <th>Vicio</th>
               <th>Estado</th>
+              <th>Progreso</th>
               <th>Racha</th>
-              <th>XP</th>
-              <th>Nivel</th>
-              <th>Inicio</th>
+              <th>XP / Nivel</th>
+              <th>Ayudantes</th>
+              <th>Inicio → Fin</th>
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody id="users-tbody">
-            <tr><td colspan="8" class="loading-row">Cargando usuarios...</td></tr>
+          <tbody id="players-tbody">
+            <tr><td colspan="9" class="loading-row">Cargando players...</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- ── Sección: Eventos ────────────────────────────────────────────────── -->
+    <!-- ══════════════════════════════════════════════════════
+         SECCIÓN: MISIONES (CRUD)
+    ══════════════════════════════════════════════════════ -->
+    <section id="section-misiones" class="section hidden">
+      <div class="section-header">
+        <h2>🎯 Misiones</h2>
+        <p class="section-desc">Gestión completa del catálogo de misiones del bot.</p>
+        <button class="btn btn-primary" id="btn-new-mission" onclick="openMissionModal()">
+          ➕ Nueva misión
+        </button>
+      </div>
+
+      <div class="filters-bar">
+        <div class="input-wrapper search-wrapper">
+          <span class="input-icon">🔍</span>
+          <input id="search-missions" type="text" placeholder="Buscar misión..." />
+        </div>
+        <select id="filter-categoria" class="select-filter">
+          <option value="">Todas las categorías</option>
+          <option value="salud">Salud</option>
+          <option value="actividad">Actividad</option>
+          <option value="mindfulness">Mindfulness</option>
+          <option value="reflexion">Reflexión</option>
+          <option value="crisis">Crisis</option>
+          <option value="social">Social</option>
+          <option value="digital">Digital</option>
+          <option value="motivacion">Motivación</option>
+          <option value="medicamento">Medicamento</option>
+          <option value="general">General</option>
+        </select>
+        <select id="filter-activa" class="select-filter">
+          <option value="">Todas</option>
+          <option value="true">Activas</option>
+          <option value="false">Inactivas</option>
+        </select>
+      </div>
+
+      <div class="missions-grid" id="missions-grid">
+        <div class="skeleton-list">
+          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECCIÓN: MENSAJES
+    ══════════════════════════════════════════════════════ -->
+    <section id="section-mensajes" class="section hidden">
+      <div class="section-header">
+        <h2>💬 Mensajes</h2>
+        <p class="section-desc">Envía mensajes individuales o a todos los usuarios activos.</p>
+      </div>
+
+      <div class="cards-row">
+        <!-- Mensaje individual -->
+        <div class="card">
+          <div class="card-header">
+            <h3>📤 Mensaje Individual</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="msg-telegram-id">Telegram ID del destinatario</label>
+              <div class="input-wrapper">
+                <span class="input-icon">🆔</span>
+                <input id="msg-telegram-id" type="text" placeholder="Ej: 123456789" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="msg-individual">Mensaje</label>
+              <textarea id="msg-individual" rows="4" placeholder="Escribe el mensaje que verá el usuario en Telegram..."></textarea>
+            </div>
+            <div id="msg-individual-feedback" class="alert hidden"></div>
+            <button class="btn btn-primary" id="btn-send-individual">
+              📤 Enviar mensaje
+            </button>
+          </div>
+        </div>
+
+        <!-- Broadcast masivo -->
+        <div class="card">
+          <div class="card-header">
+            <h3>📢 Broadcast a Activos</h3>
+          </div>
+          <div class="card-body">
+            <p class="text-muted" style="margin-bottom:16px;font-size:13px">
+              Enviará el mensaje a <strong id="broadcast-count">todos</strong> los usuarios con plan activo o en recuperación.
+            </p>
+            <div class="form-group">
+              <label for="msg-broadcast">Mensaje del broadcast</label>
+              <textarea id="msg-broadcast" rows="4" placeholder="Escribe el mensaje para todos los usuarios activos..."></textarea>
+            </div>
+            <div id="msg-broadcast-feedback" class="alert hidden"></div>
+            <button class="btn btn-primary" id="btn-send-broadcast">
+              📢 Enviar a todos los activos
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECCIÓN: MARKETING
+    ══════════════════════════════════════════════════════ -->
+    <section id="section-marketing" class="section hidden">
+      <div class="section-header">
+        <h2>📣 Marketing</h2>
+        <p class="section-desc">Crea y envía campañas de actualización a todos los usuarios.</p>
+      </div>
+
+      <div class="cards-row">
+        <div class="card">
+          <div class="card-header">
+            <h3>✍️ Nueva Campaña</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="mkt-titulo">Título de la campaña</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📌</span>
+                <input id="mkt-titulo" type="text" placeholder="Ej: Nueva función: recordatorios personalizados" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mkt-contenido">Contenido del mensaje</label>
+              <textarea id="mkt-contenido" rows="5" placeholder="🎉 ¡Hola! Tenemos novedades para ti...&#10;&#10;Puedes usar *negritas* y _cursivas_ (formato Markdown de Telegram)."></textarea>
+            </div>
+            <div id="mkt-feedback" class="alert hidden"></div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button class="btn btn-primary" id="btn-send-marketing">
+                🚀 Enviar campaña a todos
+              </button>
+              <button class="btn btn-sm" id="btn-preview-marketing" style="align-self:center">
+                👁️ Vista previa
+              </button>
+            </div>
+
+            <!-- Preview -->
+            <div id="mkt-preview" class="hidden" style="margin-top:20px;padding:16px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;font-size:14px;white-space:pre-wrap;line-height:1.6"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>📅 Historial de Campañas</h3>
+          </div>
+          <div class="card-body" id="broadcasts-history">
+            <div class="skeleton-list">
+              <div class="skeleton"></div><div class="skeleton"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECCIÓN: EVENTOS
+    ══════════════════════════════════════════════════════ -->
     <section id="section-eventos" class="section hidden">
       <div class="section-header">
         <h2>📋 Historial de Eventos</h2>
@@ -196,11 +370,8 @@
       </div>
       <div class="timeline" id="events-timeline">
         <div class="skeleton-list">
-          <div class="skeleton"></div>
-          <div class="skeleton"></div>
-          <div class="skeleton"></div>
-          <div class="skeleton"></div>
-          <div class="skeleton"></div>
+          <div class="skeleton"></div><div class="skeleton"></div>
+          <div class="skeleton"></div><div class="skeleton"></div>
         </div>
       </div>
     </section>
@@ -253,12 +424,19 @@
             <span class="info-value" id="info-fecha-inicio">—</span>
           </div>
           <div class="info-item">
+            <span class="info-label">Fecha Fin Estimada</span>
+            <span class="info-value" id="info-fecha-fin">—</span>
+          </div>
+          <div class="info-item">
             <span class="info-label">Compromiso</span>
             <span class="info-value" id="info-compromiso">—</span>
           </div>
+          <div class="info-item">
+            <span class="info-label">% Progreso</span>
+            <span class="info-value" id="info-progreso-pct">—</span>
+          </div>
         </div>
 
-        <!-- Edit inline -->
         <div class="edit-section">
           <h4>✏️ Editar datos</h4>
           <div class="edit-grid">
@@ -306,9 +484,16 @@
           </div>
         </div>
         <div class="xp-bar-wrapper">
-          <div class="xp-bar-label">Progreso al siguiente nivel</div>
+          <div class="xp-bar-label">Progreso del plan</div>
           <div class="xp-bar-track">
-            <div class="xp-bar-fill" id="prog-xp-bar"></div>
+            <div class="xp-bar-fill" id="prog-plan-bar"></div>
+          </div>
+          <div class="xp-bar-text" id="prog-plan-text">—</div>
+        </div>
+        <div class="xp-bar-wrapper" style="margin-top:12px">
+          <div class="xp-bar-label">XP al siguiente nivel</div>
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="prog-xp-bar" style="background:linear-gradient(90deg,#a855f7,#7c3aed)"></div>
           </div>
           <div class="xp-bar-text" id="prog-xp-text">—</div>
         </div>
@@ -347,6 +532,79 @@
         <div id="action-feedback" class="alert hidden"></div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ─── Modal: Misión (crear / editar) ───────────────────────────────────── -->
+  <div class="modal-overlay hidden" id="mission-modal-overlay">
+    <div class="modal glass-card" id="mission-modal" style="max-width:540px">
+      <div class="modal-header">
+        <h3 id="mission-modal-title">➕ Nueva Misión</h3>
+        <button class="modal-close" id="mission-modal-close">✕</button>
+      </div>
+
+      <div style="padding:0 4px">
+        <div class="form-group">
+          <label for="m-nombre">Nombre de la misión *</label>
+          <input type="text" id="m-nombre" placeholder="Ej: Camina 10 minutos 🚶" />
+        </div>
+        <div class="form-group">
+          <label for="m-descripcion">Descripción</label>
+          <textarea id="m-descripcion" rows="2" placeholder="¿Qué debe hacer el usuario?"></textarea>
+        </div>
+        <div class="edit-grid">
+          <div class="form-group">
+            <label for="m-categoria">Categoría</label>
+            <select id="m-categoria">
+              <option value="general">General</option>
+              <option value="salud">Salud</option>
+              <option value="actividad">Actividad</option>
+              <option value="mindfulness">Mindfulness</option>
+              <option value="reflexion">Reflexión</option>
+              <option value="crisis">Crisis</option>
+              <option value="social">Social</option>
+              <option value="digital">Digital</option>
+              <option value="motivacion">Motivación</option>
+              <option value="medicamento">Medicamento 💊</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="m-puntos">Puntos de recompensa</label>
+            <input type="number" id="m-puntos" value="10" min="1" max="500" />
+          </div>
+        </div>
+
+        <!-- Horario programado (opcional) -->
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px">
+            <input type="checkbox" id="m-tiene-horario" />
+            <span>¿Tiene horario programado? (ej: pastillas)</span>
+          </label>
+        </div>
+        <div id="m-horario-fields" class="edit-grid hidden">
+          <div class="form-group">
+            <label for="m-hora">Hora (local)</label>
+            <input type="number" id="m-hora" min="0" max="23" placeholder="7" />
+          </div>
+          <div class="form-group">
+            <label for="m-minuto">Minuto</label>
+            <input type="number" id="m-minuto" min="0" max="59" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-top:8px">
+          <input type="checkbox" id="m-activa" checked />
+          <label for="m-activa" style="margin:0;cursor:pointer">Misión activa</label>
+        </div>
+
+        <input type="hidden" id="m-id" />
+        <div id="mission-modal-feedback" class="alert hidden" style="margin:12px 0"></div>
+
+        <div style="display:flex;gap:12px;margin-top:20px">
+          <button class="btn btn-primary" id="btn-save-mission">💾 Guardar misión</button>
+          <button class="btn" onclick="closeMissionModal()">Cancelar</button>
+        </div>
+      </div>
     </div>
   </div>
 

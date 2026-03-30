@@ -622,6 +622,76 @@ textarea { resize: vertical; min-height: 80px; }
 /* ─── Actions Grid ────────────────────────────────────────────────────────── */
 .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 
+/* ─── KPI Teal ────────────────────────────────────────────────────────────── */
+.kpi-teal { border-color: rgba(34,211,238,0.3); box-shadow: 0 0 20px rgba(34,211,238,0.05); }
+
+/* ─── Section header with button ─────────────────────────────────────────── */
+.section-header { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+.section-header > div { flex: 1; }
+.section-header h2 { font-size: 22px; font-weight: 700; }
+.section-header p.section-desc { color: var(--color-text-muted); font-size: 13px; margin-top: 4px; }
+
+/* ─── Missions Grid ───────────────────────────────────────────────────────── */
+.missions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.mission-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  transition: all var(--transition);
+}
+.mission-card:hover { background: var(--color-surface-hover); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.mission-inactive { opacity: 0.5; }
+.mission-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
+.mission-card-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.mission-card-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.mission-card-pts { font-size: 18px; font-weight: 800; color: var(--color-purple); white-space: nowrap; }
+.mission-card-desc { font-size: 13px; color: var(--color-text-muted); margin-bottom: 14px; line-height: 1.5; }
+.mission-card-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+
+/* ─── Category / Schedule Badges ─────────────────────────────────────────── */
+.badge-categoria {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(99,102,241,0.15);
+  color: var(--color-primary-light);
+  border: 1px solid rgba(99,102,241,0.3);
+}
+.badge-horario {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(245,158,11,0.15);
+  color: var(--color-orange);
+  border: 1px solid rgba(245,158,11,0.3);
+}
+
+/* ─── Danger outline button ───────────────────────────────────────────────── */
+.btn-danger-outline {
+  background: transparent;
+  border: 1px solid rgba(239,68,68,0.3);
+  color: var(--color-red);
+}
+.btn-danger-outline:hover { background: rgba(239,68,68,0.1); }
+
+/* ─── Broadcast history item ──────────────────────────────────────────────── */
+.broadcast-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.broadcast-item:last-child { border-bottom: none; }
+.broadcast-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.broadcast-contenido { font-size: 12px; color: var(--color-text-muted); line-height: 1.5; white-space: pre-wrap; }
+
 /* ─── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); }
@@ -634,4 +704,6 @@ textarea { resize: vertical; min-height: 80px; }
   .progress-summary { grid-template-columns: 1fr; }
   .actions-grid { grid-template-columns: 1fr; }
   .section { padding: 20px 14px; }
+  .missions-grid { grid-template-columns: 1fr; }
+  .mission-card-actions { flex-direction: column; align-items: flex-start; }
 }

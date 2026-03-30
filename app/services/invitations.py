@@ -5,7 +5,7 @@ Genera tokens únicos, los valida y hace trazabilidad.
 import logging
 from typing import Optional, Dict, Tuple
 
-from app.config import MAX_HELPERS, INVITATION_EXPIRY_HOURS, TELEGRAM_BOT_TOKEN
+from app.config import MAX_HELPERS, INVITATION_EXPIRY_HOURS, BOT_USERNAME
 from app.services import firebase_db as fdb
 
 logger = logging.getLogger(__name__)
@@ -30,11 +30,10 @@ def generate_invitation_links(telegram_id: str) -> Tuple[str, str]:
 
     token = fdb.create_invitation(telegram_id, max_usos=usos_restantes)
 
-    # El bot de Telegram usa deep links: t.me/BOT_USERNAME?start=TOKEN
-    # Para obtener el username del bot desde el token de configuración
-    link = f"https://t.me/TU_BOT_USERNAME?start=inv_{token}"
+    # Deep link real usando el username del bot desde config
+    link = f"https://t.me/{BOT_USERNAME}?start=inv_{token}"
 
-    logger.info(f"Invitación generada: token={token}, para usuario={telegram_id}")
+    logger.info(f"Invitación generada: token={token}, para usuario={telegram_id}, link={link}")
     return token, link
 
 
