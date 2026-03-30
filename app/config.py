@@ -18,7 +18,7 @@ WEBHOOK_SECRET: str = os.getenv("WEBHOOK_SECRET", "RenovaBot_Webhook_Secret_2026
 # Credenciales del Admin SDK (archivo JSON de cuenta de servicio)
 # Descárgalo desde: Firebase Console > Configuración > Cuentas de Servicio > Generar clave
 FIREBASE_CREDENTIALS_PATH: str = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase_credentials.json")
-FIREBASE_DATABASE_URL: str = "https://bot-apoyo-erradicacion-vicios-default-rtdb.firebaseio.com"
+FIREBASE_DATABASE_URL: str = "https://synapse-ftp-default-rtdb.firebaseio.com/"
 
 # ─── Flask ───────────────────────────────────────────────────────────────────
 FLASK_SECRET_KEY: str = os.getenv("FLASK_SECRET_KEY", "RenovaBot_Flask_Key_2026_Panel_Admin")

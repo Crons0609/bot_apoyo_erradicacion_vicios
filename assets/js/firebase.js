@@ -3,14 +3,14 @@
    Proyecto: bot-apoyo-erradicacion-vicios
 ────────────────────────────────────────────────────────── */
 const firebaseConfig = {
-  apiKey: "AIzaSyBxt6euJyj6kb2WEdrVU0w8tzJ8r_bhZa4",
-  authDomain: "bot-apoyo-erradicacion-vicios.firebaseapp.com",
-  databaseURL: "https://bot-apoyo-erradicacion-vicios-default-rtdb.firebaseio.com",
-  projectId: "bot-apoyo-erradicacion-vicios",
-  storageBucket: "bot-apoyo-erradicacion-vicios.firebasestorage.app",
-  messagingSenderId: "776911051853",
-  appId: "1:776911051853:web:743a364d911356bc37d004",
-  measurementId: "G-E7BYE9WQ8V"
+  apiKey: "AIzaSyDlpifktiEE-k2HexCrzjEuVtPG87vGMUc",
+  authDomain: "synapse-ftp.firebaseapp.com",
+  databaseURL: "https://synapse-ftp-default-rtdb.firebaseio.com",
+  projectId: "synapse-ftp",
+  storageBucket: "synapse-ftp.firebasestorage.app",
+  messagingSenderId: "80708296920",
+  appId: "1:80708296920:web:d081cf3b0c1a818859f7ad",
+  measurementId: "G-NGYB2YW67V"
 };
 
 if (!firebase.apps || !firebase.apps.length) {
