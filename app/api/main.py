@@ -71,6 +71,12 @@ def index():
     return render_template("index.html")
 
 
+@flask_app.route("/ping")
+def ping():
+    """Endpoint ligero para que el cronjob interno lo alcance y no deje dormir la app."""
+    return jsonify({"ok": True, "status": "awake"})
+
+
 @flask_app.route("/admin")
 @flask_app.route("/admin/")
 def admin_panel():

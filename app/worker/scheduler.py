@@ -11,6 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from app.services import firebase_db as fdb
 from app.services import messages as msg
 from app.services.xp_system import calculate_phase, PHASE_INTERVALS, update_streak
+from app.config import WEBHOOK_URL
 
 logger = logging.getLogger(__name__)
 scheduler = BackgroundScheduler(timezone="UTC")
@@ -159,6 +160,26 @@ def job_check_inactive_users():
             continue
 
 
+# ─── Job: Keep Alive (Render Free Tier) ──────────────────────────────────────
+
+def job_keep_alive():
+    """
+    Hace un ping (GET request) al propio endpoint /ping del servidor.
+    En la capa gratuita de Render (Web Service), esto ayuda a reiniciar el
+    contador de inactividad de 15 minutos, manteniendo la app despierta.
+    """
+    if not WEBHOOK_URL:
+        # Si no hay URL configurada, no hacemos ping externo
+        return
+
+    url = f"{WEBHOOK_URL.rstrip('/')}/ping"
+    try:
+        import requests
+        resp = requests.get(url, timeout=10)
+        logger.info(f"[KEEP ALIVE] Ping a {url} exitoso. Status: {resp.status_code}")
+    except Exception as e:
+        logger.warning(f"[KEEP ALIVE] Falló el ping a {url}: {e}")
+
 # ─── Inicialización del scheduler ────────────────────────────────────────────
 
 def start_scheduler():
@@ -206,5 +227,15 @@ def start_scheduler():
         max_instances=1,
     )
 
+    # Keep Alive para Render (cada 14 minutos)
+    scheduler.add_job(
+        job_keep_alive,
+        "interval",
+        minutes=14,
+        id="keep_alive",
+        replace_existing=True,
+        max_instances=1,
+    )
+
     scheduler.start()
-    logger.info("✅ Scheduler iniciado con 4 jobs activos.")
+    logger.info("✅ Scheduler iniciado con 5 jobs activos.")
